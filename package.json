@@ -1,0 +1,30 @@
+{
+  "name": "codemerge",
+  "version": "0.0.5",
+  "main": "build/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild index.js --bundle --minify --platform=node --outfile=build/index.js",
+    "prepublish": "npm run build"
+  },
+  "bin": "./build/index.js",
+  "author": {
+    "email": "sidmohanty11@gmail.com",
+    "name": "sidmohanty11",
+    "url": "https://github.com/sidmohanty11"
+  },
+  "dependencies": {
+    "inquirer": "^8.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.11"
+  },
+  "keywords": [
+    "merge",
+    "code",
+    "codemerge",
+    "gpt-builder",
+    "gpt",
+    "builder"
+  ]
+}
