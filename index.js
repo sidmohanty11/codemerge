@@ -36,11 +36,30 @@ function readFiles(directory, filelist = [], excludeFiles) {
   return filelist;
 }
 
-function mergeCodeFiles(directory, excludeFiles) {
+function minifyJSONContent(jsonContent) {
+  return JSON.stringify(JSON.parse(jsonContent));
+}
+
+function splitAndSaveJSONContent(jsonContent, baseFileName, maxSize) {
+  let part = 1;
+  for (let start = 0; start < jsonContent.length; start += maxSize, part++) {
+    const chunk = jsonContent.substring(start, start + maxSize);
+    fs.writeFileSync(`${baseFileName}_part${part}.json`, chunk);
+  }
+  console.log(`Files split into multiple parts (${part - 1})`);
+}
+
+function mergeCodeFiles(directory, excludeFiles, maxSize) {
   const allFiles = readFiles(directory, [], excludeFiles);
-  const jsonContent = JSON.stringify(allFiles, null, 2);
-  fs.writeFileSync("merged_code_files.json", jsonContent);
-  console.log("Files merged into merged_code_files.json");
+  let jsonContent = JSON.stringify(allFiles);
+  jsonContent = minifyJSONContent(jsonContent);
+
+  if (maxSize && Buffer.byteLength(jsonContent, "utf8") > maxSize) {
+    splitAndSaveJSONContent(jsonContent, "merged_code_files", maxSize);
+  } else {
+    fs.writeFileSync("merged_code_files.json", jsonContent);
+    console.log("Files merged into merged_code_files.json");
+  }
 }
 
 async function promptForInputs() {
@@ -57,16 +76,26 @@ async function promptForInputs() {
       message: "Enter comma-separated files or directories to exclude:",
       default: DEFAULT_EXCLUDE_FILES.join(","),
     },
+    {
+      type: "input",
+      name: "maxSize",
+      message: "Enter the maximum file size in MB for each JSON file (leave empty for unlimited):",
+      default: "",
+      filter: (input) => {
+        return input ? parseInt(input) * 1024 * 1024 : null;
+      },
+    },
   ]);
 
   return {
     directory: answers.path,
     exclude: answers.exclude.split(",").map((s) => s.trim()),
+    maxSize: answers.maxSize,
   };
 }
 
 async function main() {
-  const { directory, exclude } = await promptForInputs();
+  const { directory, exclude, maxSize } = await promptForInputs();
 
   if (!fs.existsSync(directory)) {
     console.error("Directory does not exist.");
@@ -74,7 +103,7 @@ async function main() {
   }
 
   const resolvedDirectory = path.resolve(directory);
-  mergeCodeFiles(resolvedDirectory, exclude);
+  mergeCodeFiles(resolvedDirectory, exclude, maxSize);
 }
 
 main();
