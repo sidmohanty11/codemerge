@@ -2,6 +2,8 @@
 
 `codemerge` is a simple, yet powerful command-line tool for merging all your code files into a single JSON file. This tool is especially handy for developers who need to aggregate source code from various files for analysis, backup, or documentation purposes.
 
+![Screenshot 2023-12-31 at 9 51 12 PM](https://github.com/sidmohanty11/codemerge/assets/73601258/dd7ccf29-4321-4941-b66c-21f09b689fba)
+
 ## Features
 
 - **Easy to Use**: Run `codemerge` in any directory to merge your code files.
