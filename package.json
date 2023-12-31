@@ -1,6 +1,6 @@
 {
   "name": "codemerge",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "build/index.js",
   "license": "MIT",
   "scripts": {
@@ -8,6 +8,10 @@
     "prepublish": "npm run build"
   },
   "bin": "./build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sidmohanty11/codemerge"
+  },
   "author": {
     "email": "sidmohanty11@gmail.com",
     "name": "sidmohanty11",
